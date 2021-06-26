@@ -3,8 +3,7 @@ using UnityEngine.AI;
 
 public class ArrowNPCMovement : MonoBehaviour
 {
-    public float runAwayDistance = 10;
-    public GameObject targetGO;
+    public GameObject targetGo;
     private NavMeshAgent navMeshAgent;
 
     void Start()
@@ -12,29 +11,16 @@ public class ArrowNPCMovement : MonoBehaviour
         navMeshAgent = GetComponent<NavMeshAgent>();
     }
 
-    void Update()
+    private void Update()
     {
-        Vector3 targetPosition = targetGO.transform.position;
-        float distanceToTarget = Vector3.Distance(transform.position, targetPosition);
-        if (distanceToTarget < runAwayDistance)
-            FleeFromTarget(targetPosition);
+        HeadForDestintation();
     }
 
-    private void FleeFromTarget(Vector3 targetPosition)
+    private void HeadForDestintation()
     {
-        Vector3 destination = PositionToFleeTowards(targetPosition);
-        HeadForDestintation(destination);
-    }
-
-    private void HeadForDestintation(Vector3 destinationPosition)
-    {
-        navMeshAgent.SetDestination(destinationPosition);
-    }
-
-    private Vector3 PositionToFleeTowards(Vector3 targetPosition)
-    {
-        transform.rotation = Quaternion.LookRotation(transform.position - targetPosition);
-        Vector3 runToPosition = targetPosition + (transform.forward * runAwayDistance);
-        return runToPosition;
+        Vector3 destination = targetGo.transform.position;
+        navMeshAgent.SetDestination(destination);
+        // show yellow line from source to target
+        UsefulFunctions.DebugRay(transform.position, destination, Color.yellow);
     }
 }
